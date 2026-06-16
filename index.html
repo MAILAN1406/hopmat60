@@ -325,43 +325,21 @@ canvas.addEventListener(
 
 /* DOWNLOAD */
 
+function downloadImage() {
 
-    function downloadImage() {
+    canvas.toBlob(function(blob) {
 
-    try {
-
-        const dataURL = canvas.toDataURL("image/png");
+        const url = URL.createObjectURL(blob);
 
         const win = window.open();
 
-        if (!win) {
-            alert("Trình duyệt đang chặn cửa sổ mới. Hãy mở bằng Chrome hoặc Safari.");
-            return;
-        }
+        win.location = url;
 
-        win.document.write(`
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>Lưu ảnh</title>
-                <meta name="viewport" content="width=device-width,initial-scale=1">
-            </head>
-            <body style="margin:0;text-align:center;background:#fff;">
-                <img src="${dataURL}" style="max-width:100%;height:auto;">
-                <p style="font-family:Arial;padding:10px">
-                    Nhấn giữ ảnh để lưu về máy
-                </p>
-            </body>
-            </html>
-        `);
-
-    } catch(err) {
-
-        console.error(err);
-        alert("Không thể xuất ảnh.");
-    }
+    }, "image/png");
 }
 
+
+    
 
 
 
