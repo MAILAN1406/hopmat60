@@ -122,10 +122,10 @@ let startY = 0;
 /* KHUNG HỌP MẶT */
 
 const centerX = 640;
-const centerY = 620;
+const centerY = 500;
 
-const radiusX = 510;
-const radiusY = 430;
+const radiusX = 430;
+const radiusY = 350;
 
 /* LOAD KHUNG */
 
@@ -144,20 +144,26 @@ document.getElementById("upload")
 
     const url = URL.createObjectURL(file);
 
-    photo.onload = function(){
 
-        loaded = true;
 
-        scale = Math.max(
-            (radiusX * 2.2) / photo.width,
-            (radiusY * 2.2) / photo.height
-        );
+photo.onload = function(){
 
-        offsetX = 0;
-        offsetY = 0;
+    console.log("Ảnh đã load");
 
-        draw();
-    };
+    loaded = true;
+
+    scale = Math.max(
+        (radiusX * 2.2) / photo.width,
+        (radiusY * 2.2) / photo.height
+    );
+
+    offsetX = 0;
+    offsetY = 0;
+
+    draw();
+};
+
+    
 
     photo.src = url;
 });
@@ -193,6 +199,16 @@ function draw(){
         const w = photo.width * scale;
         const h = photo.height * scale;
 
+        console.log(
+    centerX - w/2 + offsetX,
+    centerY - h/2 + offsetY,
+    w,
+    h
+);
+        
+        
+        
+        
         ctx.drawImage(
             photo,
             centerX - w/2 + offsetX,
