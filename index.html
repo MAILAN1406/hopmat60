@@ -397,8 +397,16 @@ function downloadImage() {
     }, "image/png");
 }
 
+   <button onclick="downloadImage()">
+📥 Tải ảnh về
+</button>
 
-
+   document
+    .getElementById("downloadBtn")
+    .addEventListener(
+        "click",
+        downloadImage
+    );
 
 
    
