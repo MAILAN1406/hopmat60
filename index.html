@@ -134,38 +134,33 @@ frame.onload = () => draw();
 
     /* CHỌN ẢNH */
 
-document.getElementById("upload").addEventListener("change", function(e){
 
-    console.log("Đã chọn file");
+document.getElementById("upload")
+.addEventListener("change", function(e){
 
     const file = e.target.files[0];
 
-    console.log(file);
-
     if(!file) return;
 
-    const reader = new FileReader();
+    const url = URL.createObjectURL(file);
 
-    reader.onload = function(ev){
+    photo.onload = function(){
 
-        console.log("Đọc file thành công");
+        loaded = true;
 
-        photo.onload = function(){
+        scale = Math.max(
+            (radiusX * 2.2) / photo.width,
+            (radiusY * 2.2) / photo.height
+        );
 
-            console.log("Ảnh đã load");
-            console.log(photo.width, photo.height);
+        offsetX = 0;
+        offsetY = 0;
 
-            loaded = true;
-
-            draw();
-        };
-
-        photo.src = ev.target.result;
+        draw();
     };
 
-    reader.readAsDataURL(file);
+    photo.src = url;
 });
-
 /* VẼ */
 
 function draw(){
