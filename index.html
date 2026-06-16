@@ -131,14 +131,16 @@ const radiusY = 430;
 
 frame.onload = () => draw();
 
-/* CHỌN ẢNH */
 
-document.getElementById("upload")
-.addEventListener("change", function(e){
+    /* CHỌN ẢNH */
 
-    console.log("Đã chọn ảnh");
+document.getElementById("upload").addEventListener("change", function(e){
+
+    console.log("Đã chọn file");
 
     const file = e.target.files[0];
+
+    console.log(file);
 
     if(!file) return;
 
@@ -146,17 +148,14 @@ document.getElementById("upload")
 
     reader.onload = function(ev){
 
+        console.log("Đọc file thành công");
+
         photo.onload = function(){
 
+            console.log("Ảnh đã load");
+            console.log(photo.width, photo.height);
+
             loaded = true;
-
-            scale = Math.max(
-                (radiusX * 2.3) / photo.width,
-                (radiusY * 2.3) / photo.height
-            );
-
-            offsetX = 0;
-            offsetY = 0;
 
             draw();
         };
@@ -165,7 +164,6 @@ document.getElementById("upload")
     };
 
     reader.readAsDataURL(file);
-
 });
 
 /* VẼ */
