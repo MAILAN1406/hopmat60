@@ -152,10 +152,10 @@ photo.onload = function(){
 
     loaded = true;
 
-    scale = Math.max(
-        (radiusX * 2.2) / photo.width,
-        (radiusY * 2.2) / photo.height
-    );
+   scale = Math.max(
+    (radiusX * 2) / photo.width,
+    (radiusY * 2) / photo.height
+);
 
     offsetX = 0;
     offsetY = 0;
@@ -199,11 +199,11 @@ function draw(){
         const w = photo.width * scale;
         const h = photo.height * scale;
 
-        console.log(
-    centerX - w/2 + offsetX,
-    centerY - h/2 + offsetY,
-    w,
-    h
+console.log(
+    "X:", Math.round(centerX - w/2 + offsetX),
+    "Y:", Math.round(centerY - h/2 + offsetY),
+    "W:", Math.round(w),
+    "H:", Math.round(h)
 );
         
         
