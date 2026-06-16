@@ -359,51 +359,47 @@ function resetImage() {
 /* =====================
    DOWNLOAD
 ===================== */
-
 function downloadImage() {
 
     if (!loaded) {
-
-        alert(
-            "Vui lòng chọn ảnh trước."
-        );
-
+        alert("Vui lòng chọn ảnh trước.");
         return;
     }
 
-    canvas.toBlob(
-        function(blob) {
+    canvas.toBlob((blob) => {
 
-            const url =
-                URL.createObjectURL(
-                    blob
-                );
+        const url = URL.createObjectURL(blob);
 
-            const a =
-                document.createElement(
-                    "a"
-                );
+        const link = document.createElement("a");
 
-            a.href = url;
-            a.download =
-                "HopMat60Nam.png";
+        link.href = url;
+        link.setAttribute(
+            "download",
+            "HopMat60Nam.png"
+        );
 
-            document.body.appendChild(a);
+        document.body.appendChild(link);
 
-            a.click();
+        link.dispatchEvent(
+            new MouseEvent("click", {
+                bubbles: true,
+                cancelable: true,
+                view: window
+            })
+        );
 
-            document.body.removeChild(a);
+        document.body.removeChild(link);
 
-            setTimeout(() => {
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+        }, 1000);
 
-                URL.revokeObjectURL(
-                    url
-                );
-
-            }, 2000);
-
-        },
-        "image/png"
-    );
+    }, "image/png");
 }
+
+
+
+
+
+   
 </script>
