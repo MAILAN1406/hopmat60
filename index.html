@@ -92,18 +92,16 @@ input[type=file]{
 </div>
 
 <canvas id="canvas" width="1280" height="1280"></canvas>
-
-
 <script>
-    document.getElementById("uploadBtn")
-.addEventListener("click", function(){
-
-    document.getElementById("upload").click();
-
-});
-
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+
+const upload = document.getElementById("upload");
+const uploadBtn = document.getElementById("uploadBtn");
+
+uploadBtn.addEventListener("click", () => {
+    upload.click();
+});
 
 const frame = new Image();
 frame.src = "frame.png";
@@ -111,6 +109,7 @@ frame.src = "frame.png";
 const photo = new Image();
 
 let loaded = false;
+
 let scale = 1;
 let offsetX = 0;
 let offsetY = 0;
@@ -119,7 +118,7 @@ let dragging = false;
 let startX = 0;
 let startY = 0;
 
-/* KHUNG HỌP MẶT */
+/* KHUNG ẢNH */
 
 const centerX = 640;
 const centerY = 500;
@@ -127,49 +126,56 @@ const centerY = 500;
 const radiusX = 430;
 const radiusY = 350;
 
-/* LOAD KHUNG */
+/* LOAD FRAME */
 
-frame.onload = () => draw();
-
-
-    /* CHỌN ẢNH */
-
-
-document.getElementById("upload")
-.addEventListener("change", function(e){
-
-    const file = e.target.files[0];
-
-    if(!file) return;
-
-    const url = URL.createObjectURL(file);
-
-
-
-photo.onload = function(){
-
-    console.log("Ảnh đã load");
-
-    loaded = true;
-
-   scale = Math.max(
-    (radiusX * 2) / photo.width,
-    (radiusY * 2) / photo.height
-);
-
-    offsetX = 0;
-    offsetY = 0;
-
+frame.onload = () => {
     draw();
 };
 
-    
+frame.onerror = () => {
+    console.error("Không tìm thấy frame.png");
+};
+
+/* CHỌN ẢNH */
+
+upload.addEventListener("change", (e) => {
+
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+
+    photo.onload = () => {
+
+        console.log("Ảnh đã load");
+        console.log(
+            "Kích thước:",
+            photo.width,
+            photo.height
+        );
+
+        loaded = true;
+
+        scale = Math.max(
+            (radiusX * 2) / photo.width,
+            (radiusY * 2) / photo.height
+        );
+
+        offsetX = 0;
+        offsetY = 0;
+
+        draw();
+
+        URL.revokeObjectURL(url);
+    };
 
     photo.src = url;
 });
+
 /* VẼ */
 
-function draw(){
+function draw() {
 
     ctx.clearRect(
         0,
@@ -178,7 +184,13 @@ function draw(){
         canvas.height
     );
 
-    if(loaded){
+    if (loaded) {
+
+        const w = photo.width * scale;
+        const h = photo.height * scale;
+
+        const x = centerX - w / 2 + offsetX;
+        const y = centerY - h / 2 + offsetY;
 
         ctx.save();
 
@@ -196,23 +208,10 @@ function draw(){
 
         ctx.clip();
 
-        const w = photo.width * scale;
-        const h = photo.height * scale;
-
-console.log(
-    "X:", Math.round(centerX - w/2 + offsetX),
-    "Y:", Math.round(centerY - h/2 + offsetY),
-    "W:", Math.round(w),
-    "H:", Math.round(h)
-);
-        
-        
-        
-        
         ctx.drawImage(
             photo,
-            centerX - w/2 + offsetX,
-            centerY - h/2 + offsetY,
+            x,
+            y,
             w,
             h
         );
@@ -220,18 +219,20 @@ console.log(
         ctx.restore();
     }
 
-    ctx.drawImage(
-        frame,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+    if (frame.complete) {
+        ctx.drawImage(
+            frame,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+    }
 }
 
-/* DRAG CHUỘT */
+/* KÉO CHUỘT */
 
-canvas.addEventListener("mousedown", function(e){
+canvas.addEventListener("mousedown", (e) => {
 
     dragging = true;
 
@@ -239,21 +240,19 @@ canvas.addEventListener("mousedown", function(e){
     startY = e.offsetY;
 });
 
-canvas.addEventListener("mousemove", function(e){
+canvas.addEventListener("mousemove", (e) => {
 
-    if(!dragging) return;
+    if (!dragging) return;
 
     const ratio =
         canvas.width /
         canvas.clientWidth;
 
     offsetX +=
-        (e.offsetX - startX)
-        * ratio;
+        (e.offsetX - startX) * ratio;
 
     offsetY +=
-        (e.offsetY - startY)
-        * ratio;
+        (e.offsetY - startY) * ratio;
 
     startX = e.offsetX;
     startY = e.offsetY;
@@ -261,12 +260,19 @@ canvas.addEventListener("mousemove", function(e){
     draw();
 });
 
-canvas.addEventListener("mouseup", ()=> dragging=false);
-canvas.addEventListener("mouseleave", ()=> dragging=false);
+canvas.addEventListener(
+    "mouseup",
+    () => dragging = false
+);
 
-/* TOUCH */
+canvas.addEventListener(
+    "mouseleave",
+    () => dragging = false
+);
 
-canvas.addEventListener("touchstart", function(e){
+/* CẢM ỨNG */
+
+canvas.addEventListener("touchstart", (e) => {
 
     const t = e.touches[0];
 
@@ -276,14 +282,14 @@ canvas.addEventListener("touchstart", function(e){
     startY = t.clientY;
 });
 
-canvas.addEventListener("touchmove", function(e){
+canvas.addEventListener("touchmove", (e) => {
 
-    if(!dragging) return;
+    if (!dragging) return;
 
     const t = e.touches[0];
 
-    offsetX += (t.clientX-startX)*2;
-    offsetY += (t.clientY-startY)*2;
+    offsetX += (t.clientX - startX) * 2;
+    offsetY += (t.clientY - startY) * 2;
 
     startX = t.clientX;
     startY = t.clientY;
@@ -291,48 +297,33 @@ canvas.addEventListener("touchmove", function(e){
     draw();
 });
 
-canvas.addEventListener("touchend", ()=>{
-    dragging=false;
-});
+canvas.addEventListener(
+    "touchend",
+    () => dragging = false
+);
 
 /* ZOOM */
 
 canvas.addEventListener(
-"wheel",
-function(e){
+    "wheel",
+    (e) => {
 
-    e.preventDefault();
+        e.preventDefault();
 
-    if(e.deltaY < 0){
+        if (e.deltaY < 0) {
+            scale *= 1.05;
+        } else {
+            scale *= 0.95;
+        }
 
-        scale *= 1.05;
-
-    }else{
-
-        scale *= 0.95;
-    }
-
-    draw();
-
-},
-{passive:false}
+        draw();
+    },
+    { passive: false }
 );
-
-function zoomIn(){
-
-    scale *= 1.05;
-    draw();
-}
-
-function zoomOut(){
-
-    scale *= 0.95;
-    draw();
-}
 
 /* DOWNLOAD */
 
-function downloadImage(){
+function downloadImage() {
 
     const link =
         document.createElement("a");
@@ -348,8 +339,11 @@ function downloadImage(){
 
     link.click();
 }
-
 </script>
+
+
+
+    
 
 </body>
 </html>
