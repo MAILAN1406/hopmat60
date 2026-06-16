@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>HỌP MẶT 60 NĂM</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f2f5f9;
+    text-align:center;
+    padding:20px;
+}
+
+h1{
+    color:#d60000;
+    margin-bottom:20px;
+}
+
+.toolbar{
+    margin-bottom:20px;
+}
+
+button{
+    border:none;
+    border-radius:50px;
+    padding:12px 24px;
+    margin:5px;
+    cursor:pointer;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    background:linear-gradient(135deg,#0066ff,#00c6ff);
+}
+
+button:hover{
+    opacity:.9;
+}
+
+canvas{
+    width:700px;
+    max-width:95%;
+    background:#fff;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+    touch-action:none;
+}
+
+.notice{
+    margin:20px auto;
+    max-width:700px;
+    text-align:left;
+    background:#fff8e1;
+    padding:15px;
+    border-left:5px solid #ff9800;
+    border-radius:8px;
+    line-height:1.7;
+}
+
+input[type=file]{
+    display:none;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>HỌP MẶT 60 NĂM</h1>
+
+<div class="toolbar">
+
+<input type="file" id="upload" accept="image/*" hidden>
+
+<button onclick="document.getElementById('upload').click()">
+📷 Chọn ảnh
+</button>
+
+<button onclick="zoomIn()">
+➕ Phóng to
+</button>
+
+<button onclick="zoomOut()">
+➖ Thu nhỏ
+</button>
+
+<button onclick="downloadImage()">
+📥 Tải ảnh
+</button>
+
+</div>
+
+<canvas id="canvas" width="1280" height="1280"></canvas>
+
+<div class="notice">
+📌 Chọn ảnh từ máy tính hoặc điện thoại.<br>
+📌 Kéo ảnh để căn chỉnh vị trí.<br>
+📌 Dùng con lăn chuột hoặc nút phóng to/thu nhỏ.<br>
+📌 Nhấn "Tải ảnh" để lưu ảnh hoàn chỉnh.
+</div>
+
+<script>
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const frame = new Image();
+frame.src = "frame.png";
+
+const photo = new Image();
+
+let loaded = false;
+let scale = 1;
+let offsetX = 0;
+let offsetY = 0;
+
+let dragging = false;
+let startX = 0;
+let startY = 0;
+
+/* KHUNG HỌP MẶT */
+
+const centerX = 640;
+const centerY = 620;
+
+const radiusX = 510;
+const radiusY = 430;
+
+/* LOAD KHUNG */
+
+frame.onload = () => draw();
+
+/* CHỌN ẢNH */
+
+document.getElementById("upload")
+.addEventListener("change", function(e){
+
+    const file = e.target.files[0];
+
+    if(!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(ev){
+
+        photo.onload = function(){
+
+            loaded = true;
+
+            scale = Math.max(
+                (radiusX * 2.3) / photo.width,
+                (radiusY * 2.3) / photo.height
+            );
+
+            offsetX = 0;
+            offsetY = 0;
+
+            draw();
+        };
+
+        photo.src = ev.target.result;
+    };
+
+    reader.readAsDataURL(file);
+});
+
+/* VẼ */
+
+function draw(){
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    if(loaded){
+
+        ctx.save();
+
+        ctx.beginPath();
+
+        ctx.ellipse(
+            centerX,
+            centerY,
+            radiusX,
+            radiusY,
+            0,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.clip();
+
+        const w = photo.width * scale;
+        const h = photo.height * scale;
+
+        ctx.drawImage(
+            photo,
+            centerX - w/2 + offsetX,
+            centerY - h/2 + offsetY,
+            w,
+            h
+        );
+
+        ctx.restore();
+    }
+
+    ctx.drawImage(
+        frame,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+}
+
+/* DRAG CHUỘT */
+
+canvas.addEventListener("mousedown", function(e){
+
+    dragging = true;
+
+    startX = e.offsetX;
+    startY = e.offsetY;
+});
+
+canvas.addEventListener("mousemove", function(e){
+
+    if(!dragging) return;
+
+    const ratio =
+        canvas.width /
+        canvas.clientWidth;
+
+    offsetX +=
+        (e.offsetX - startX)
+        * ratio;
+
+    offsetY +=
+        (e.offsetY - startY)
+        * ratio;
+
+    startX = e.offsetX;
+    startY = e.offsetY;
+
+    draw();
+});
+
+canvas.addEventListener("mouseup", ()=> dragging=false);
+canvas.addEventListener("mouseleave", ()=> dragging=false);
+
+/* TOUCH */
+
+canvas.addEventListener("touchstart", function(e){
+
+    const t = e.touches[0];
+
+    dragging = true;
+
+    startX = t.clientX;
+    startY = t.clientY;
+});
+
+canvas.addEventListener("touchmove", function(e){
+
+    if(!dragging) return;
+
+    const t = e.touches[0];
+
+    offsetX += (t.clientX-startX)*2;
+    offsetY += (t.clientY-startY)*2;
+
+    startX = t.clientX;
+    startY = t.clientY;
+
+    draw();
+});
+
+canvas.addEventListener("touchend", ()=>{
+    dragging=false;
+});
+
+/* ZOOM */
+
+canvas.addEventListener(
+"wheel",
+function(e){
+
+    e.preventDefault();
+
+    if(e.deltaY < 0){
+
+        scale *= 1.05;
+
+    }else{
+
+        scale *= 0.95;
+    }
+
+    draw();
+
+},
+{passive:false}
+);
+
+function zoomIn(){
+
+    scale *= 1.05;
+    draw();
+}
+
+function zoomOut(){
+
+    scale *= 0.95;
+    draw();
+}
+
+/* DOWNLOAD */
+
+function downloadImage(){
+
+    const link =
+        document.createElement("a");
+
+    link.download =
+        "HopMat60Nam.png";
+
+    link.href =
+        canvas.toDataURL(
+            "image/png",
+            1
+        );
+
+    link.click();
+}
+
+</script>
+
+</body>
+</html>
