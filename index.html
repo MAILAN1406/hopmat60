@@ -208,27 +208,19 @@ function draw() {
 
         ctx.clip();
 
-function draw(){
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    if(loaded){
-
         ctx.drawImage(
             photo,
-            100,
-            100,
-            500,
-            500
+            x,
+            y,
+            w,
+            h
         );
-    }
-}
-        
 
         ctx.restore();
     }
 
     if (frame.complete) {
+
         ctx.drawImage(
             frame,
             0,
@@ -238,6 +230,7 @@ function draw(){
         );
     }
 }
+
 
 /* KÉO CHUỘT */
 
