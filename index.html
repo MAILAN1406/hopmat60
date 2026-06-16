@@ -325,24 +325,41 @@ canvas.addEventListener(
 
 /* DOWNLOAD */
 
-function downloadImage() {
 
-    const dataURL = canvas.toDataURL("image/png");
+    function downloadImage() {
 
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    try {
 
-    if (isIOS) {
-        window.open(dataURL, "_blank");
-        return;
+        const dataURL = canvas.toDataURL("image/png");
+
+        const win = window.open();
+
+        if (!win) {
+            alert("Trình duyệt đang chặn cửa sổ mới. Hãy mở bằng Chrome hoặc Safari.");
+            return;
+        }
+
+        win.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Lưu ảnh</title>
+                <meta name="viewport" content="width=device-width,initial-scale=1">
+            </head>
+            <body style="margin:0;text-align:center;background:#fff;">
+                <img src="${dataURL}" style="max-width:100%;height:auto;">
+                <p style="font-family:Arial;padding:10px">
+                    Nhấn giữ ảnh để lưu về máy
+                </p>
+            </body>
+            </html>
+        `);
+
+    } catch(err) {
+
+        console.error(err);
+        alert("Không thể xuất ảnh.");
     }
-
-    const link = document.createElement("a");
-    link.href = dataURL;
-    link.download = "HopMat60Nam.png";
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
 }
 
 
