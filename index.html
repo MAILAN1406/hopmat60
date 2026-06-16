@@ -327,20 +327,30 @@ canvas.addEventListener(
 
 function downloadImage() {
 
-    const link =
-        document.createElement("a");
+    canvas.toBlob(function(blob) {
 
-    link.download =
-        "HopMat60Nam.png";
+        const url = URL.createObjectURL(blob);
 
-    link.href =
-        canvas.toDataURL(
-            "image/png",
-            1
-        );
+        const link = document.createElement("a");
 
-    link.click();
+        link.href = url;
+        link.download = "HopMat60Nam.png";
+
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+        }, 1000);
+
+    }, "image/png");
 }
+
+
+
+
+    
 </script>
 
 
