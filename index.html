@@ -3,7 +3,16 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta
+name="viewport"
+content="
+width=device-width,
+initial-scale=1,
+viewport-fit=cover
+">
+    <meta
+name="mobile-web-app-capable"
+content="yes">
 <title>KIM LUÔNG</title>
 
 <style>
@@ -390,11 +399,35 @@ function downloadImage(){
 
     
 
+    
+
+</script>
+<script>
+if(
+ !/Chrome/i.test(
+   navigator.userAgent
+ ) &&
+ /Android/i.test(
+   navigator.userAgent
+ )
+){
+ setTimeout(()=>{
+
+   alert(
+"Để tải ảnh ổn định trên Android, vui lòng mở bằng Google Chrome."
+   );
+
+ },1000);
+}
+</script>
+
+
+    
+</body>
+
 
 
     
 
-</script>
-
-</body>
+    
 </html>
