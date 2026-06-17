@@ -115,7 +115,7 @@ let dragging = false;
 let startX = 0;
 let startY = 0;
 
-/* KHUNG H?P M?T */
+/* KHUNG  */
 
 const centerX = 655;
 const centerY = 630;
@@ -127,7 +127,7 @@ const radiusY = 450;
 
 frame.onload = () => draw();
 
-/* CH?N ?NH */
+/* CHỌN ẢNH */
 
 document.getElementById("upload")
 .addEventListener("change", function(e){
@@ -161,7 +161,7 @@ document.getElementById("upload")
     reader.readAsDataURL(file);
 });
 
-/* V? */
+/* VẼ */
 
 function draw(){
 
@@ -222,7 +222,7 @@ ctx.fillRect(
     );
 }
 
-/* DRAG CHU?T */
+/* DRAG CHUỘT */
 
 canvas.addEventListener("mousedown", function(e){
 
