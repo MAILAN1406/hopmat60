@@ -65,6 +65,19 @@ canvas{
     line-height:1.7;
 }
 
+    .layout{
+display:flex;
+justify-content:center;
+align-items:flex-start;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.layout .notice{
+max-width:260px;
+text-align:left;
+}
+
 input[type=file]{
     display:none;
 }
@@ -94,7 +107,31 @@ input[type=file]{
 
 <canvas id="canvas" width="1280" height="1280"></canvas>
     
+<div class="layout">
 
+<canvas id="canvas" width="1280" height="1280"></canvas>
+
+<div class="notice"
+style="
+background:#e8f5e9;
+color:#8b0000;
+font-size:13px;
+font-style:italic;
+font-weight:bold;
+border-left:5px solid #4caf50;
+">
+
+<span style="font-size:14px;">
+LƯU Ý:
+</span><br><br>
+
+💻 KHUYẾN KHÍCH DÙNG MÁY TÍNH để dễ di chuyển và phóng to/thu nhỏ ảnh (Ctrl + con lăn chuột).<br><br>
+
+📂 HỆ ĐIỀU HÀNH ANDROID: nên sao chép link và mở bằng trình duyệt, không mở trực tiếp.
+
+</div>
+
+</div>
 
 
 <script>
@@ -399,24 +436,6 @@ function downloadImage(){
 
 
 
-<div class="notice"
-style="
-background:#e8f5e9;
-color:#8b0000;
-font-size:13px;
-font-style:italic;
-font-weight:bold;
-border-left:5px solid #4caf50;
-">
 
-<span style="font-size:14px;">
-LƯU Ý:
-</span><br><br>
-
-💻 KHUYẾN KHÍCH DÙNG MÁY TÍNH để dễ di chuyển và phóng to/thu nhỏ ảnh (Ctrl + con lăn chuột).<br><br>
-
-📂 HỆ ĐIỀU HÀNH ANDROID: nên sao chép link và mở bằng trình duyệt, không mở trực tiếp.
-
-</div>
 </body>
 </html>
