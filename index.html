@@ -343,22 +343,62 @@ function downloadImage(){
             ua
         );
 
-    if(isAndroid){
+    const isInApp =
+        ua.includes("; wv") ||
+        ua.includes("FBAN") ||
+        ua.includes("FBAV") ||
+        ua.includes("Instagram") ||
+        ua.includes("Messenger") ||
+        document.referrer.startsWith(
+            "android-app://"
+        );
+
+    // Chỉ cảnh báo Android mở trong app
+    if(
+        isAndroid &&
+        isInApp
+    ){
 
         alert(
-`Bạn đang sử dụng Android.
+`Để tải ảnh:
 
-Để tải ảnh vui lòng:
-
-1. Bấm dấu ⋮ góc trên
-2. Chọn "Mở bằng Google Chrome"
-3. Sau đó bấm lại nút Tải ảnh`
+Bấm ⋮ góc trên
+→ Mở bằng Google Chrome
+→ Bấm lại nút Tải ảnh`
         );
 
         return;
     }
 
-    // iPhone + máy tính
+    // iPhone
+    if(
+        /iPhone|iPad|iPod/
+        .test(ua)
+        &&
+        navigator.share
+    ){
+
+        canvas.toBlob(function(blob){
+
+            const file =
+                new File(
+                    [blob],
+                    "HopMat60Nam.png",
+                    {
+                        type:"image/png"
+                    }
+                );
+
+            navigator.share({
+                files:[file]
+            });
+
+        },"image/png");
+
+        return;
+    }
+
+    // Chrome Android + máy tính
 
     canvas.toBlob(function(blob){
 
