@@ -67,10 +67,40 @@ canvas{
 
     .layout{
 display:flex;
+
 justify-content:center;
-align-items:flex-start;
-gap:20px;
-flex-wrap:wrap;
+
+align-items:center;
+
+gap:8px;
+
+max-width:980px;
+
+margin:0 auto;
+}
+
+.layout .notice{
+
+width:220px;
+
+margin-top:0;
+
+text-align:left;
+
+align-self:center;
+
+}
+
+@media(max-width:900px){
+
+.layout{
+flex-direction:column;
+}
+
+.layout .notice{
+width:95%;
+}
+
 }
 
 .layout .notice{
