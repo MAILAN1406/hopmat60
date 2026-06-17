@@ -335,14 +335,53 @@ function zoomOut(){
 /* DOWNLOAD */
 function downloadImage(){
 
+    const ua =
+        navigator.userAgent;
+
+    const isAndroid =
+        /Android/i.test(ua);
+
+    const isInApp =
+        document.referrer.startsWith(
+            "android-app://"
+        )
+        ||
+        ua.includes("; wv")
+        ||
+        ua.includes("FBAN")
+        ||
+        ua.includes("FBAV")
+        ||
+        ua.includes("Instagram");
+
+    if(
+        isAndroid &&
+        isInApp
+    ){
+
+        alert(
+`Đang mở trong ứng dụng.
+
+Để tải ảnh:
+
+1. Bấm dấu ⋮ góc trên
+2. Chọn Mở bằng Chrome
+3. Bấm Tải ảnh lại`
+        );
+
+        return;
+    }
+
     canvas.toBlob(function(blob){
 
         const isIOS =
-            /iPad|iPhone|iPod/.test(
-                navigator.userAgent
-            );
+            /iPhone|iPad|iPod/
+            .test(ua);
 
-        if(isIOS && navigator.share){
+        if(
+            isIOS &&
+            navigator.share
+        ){
 
             const file =
                 new File(
@@ -359,8 +398,6 @@ function downloadImage(){
 
             return;
         }
-
-        // Android + máy tính
 
         const url =
             URL.createObjectURL(
@@ -396,6 +433,8 @@ function downloadImage(){
 
     },"image/png");
 }
+
+    
 
     
 
