@@ -339,86 +339,62 @@ function downloadImage(){
         navigator.userAgent;
 
     const isAndroid =
-        /Android/i.test(ua);
-
-    const isInApp =
-        ua.includes("; wv") ||
-        ua.includes("FBAN") ||
-        ua.includes("FBAV") ||
-        ua.includes("Instagram") ||
-        document.referrer.startsWith(
-            "android-app://"
+        /Android/i.test(
+            ua
         );
 
-    const data =
-        canvas.toDataURL(
-            "image/png"
-        );
+    if(isAndroid){
 
-    // Android mở trong Zalo/Messenger
-    if(
-        isAndroid &&
-        isInApp
-    ){
+        alert(
+`Bạn đang sử dụng Android.
 
-        window.open(
-            data,
-            "_blank"
+Để tải ảnh vui lòng:
+
+1. Bấm dấu ⋮ góc trên
+2. Chọn "Mở bằng Google Chrome"
+3. Sau đó bấm lại nút Tải ảnh`
         );
 
         return;
     }
 
-    // iPhone
-    if(
-        /iPhone|iPad|iPod/
-        .test(ua)
-        &&
-        navigator.share
-    ){
+    // iPhone + máy tính
 
-        canvas.toBlob(
-        function(blob){
+    canvas.toBlob(function(blob){
 
-            const file =
-                new File(
-                    [blob],
-                    "HopMat60Nam.png",
-                    {
-                        type:"image/png"
-                    }
-                );
+        const url =
+            URL.createObjectURL(
+                blob
+            );
 
-            navigator.share({
-                files:[file]
-            });
+        const a =
+            document.createElement(
+                "a"
+            );
 
-        },"image/png");
+        a.href =
+            url;
 
-        return;
-    }
+        a.download =
+            "HopMat60Nam.png";
 
-    // Chrome Android + máy tính
-    const a =
-        document.createElement(
-            "a"
+        document.body.appendChild(
+            a
         );
 
-    a.href =
-        data;
+        a.click();
 
-    a.download =
-        "HopMat60Nam.png";
+        a.remove();
 
-    document.body.appendChild(
-        a
-    );
+        setTimeout(()=>{
+            URL.revokeObjectURL(
+                url
+            );
+        },3000);
 
-    a.click();
+    },"image/png");
 
-    a.remove();
 }
-
     
 
     
