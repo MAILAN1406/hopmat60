@@ -405,61 +405,64 @@ function downloadImage(){
 
 <script>
 
-function isInAppBrowser(){
+function showOpenChromeNotice(){
 
- const ua =
- navigator.userAgent || "";
+    const ua =
+        navigator.userAgent;
 
- return (
-   ua.includes("FBAN") ||
-   ua.includes("FBAV") ||
-   ua.includes("Messenger") ||
-   ua.includes("Instagram") ||
-   ua.includes("Zalo") ||
-   ua.includes("; wv") ||
-   ua.includes("Line")
- );
+    const isAndroid =
+        /Android/i.test(ua);
 
-}
+    const isStandalone =
+        window.matchMedia(
+            "(display-mode: standalone)"
+        ).matches;
 
-if(
- /Android/i.test(
- navigator.userAgent
- )
- &&
- isInAppBrowser()
-){
+    const isNormalBrowser =
+        navigator.userActivation ||
+        window.chrome ||
+        document.referrer.includes("android-app://");
 
- document.body.insertAdjacentHTML(
- "afterbegin",
+    if(
+        isAndroid &&
+        !isStandalone &&
+        !isNormalBrowser
+    ){
 
- `
- <div
- style="
- background:#fff3cd;
- color:#856404;
- padding:18px;
- margin-bottom:20px;
- border-radius:12px;
- font-size:18px;
- line-height:1.7;
- ">
- ⚠️ Bạn đang mở trong ứng dụng.<br><br>
+        const box =
+        document.createElement("div");
 
- Để tải ảnh ổn định:<br>
+        box.style.cssText=`
+        background:#fff3cd;
+        color:#856404;
+        padding:18px;
+        border-radius:12px;
+        margin-bottom:18px;
+        font-size:18px;
+        line-height:1.7;
+        `;
 
- ① Bấm dấu ⋮ góc trên<br>
+        box.innerHTML=
+        `
+        ⚠️ Nếu không tải được ảnh:<br><br>
 
- ② Chọn <b>Mở bằng Chrome</b>
+        Bấm ⋮ góc trên<br>
+        → Mở bằng Chrome
+        `;
 
- </div>
- `
- );
+        document.body.prepend(box);
+    }
 
 }
+
+window.addEventListener(
+"load",
+showOpenChromeNotice
+);
 
 </script>
 
+    
     
 </body>
 
