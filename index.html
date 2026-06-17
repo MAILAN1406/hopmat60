@@ -333,74 +333,82 @@ function zoomOut(){
 }
 
 /* DOWNLOAD */
+/* DOWNLOAD */
+
 function downloadImage(){
 
     const ua =
         navigator.userAgent;
 
+    const isIOS =
+        /iPhone|iPad|iPod/i
+        .test(ua);
+
     const isAndroid =
-        /Android/i.test(
-            ua
-        );
+        /Android/i
+        .test(ua);
 
-    const isInApp =
-        ua.includes("; wv") ||
-        ua.includes("FBAN") ||
-        ua.includes("FBAV") ||
-        ua.includes("Instagram") ||
-        ua.includes("Messenger") ||
-        document.referrer.startsWith(
-            "android-app://"
-        );
+    // Nhận diện Chrome thật
+    const isChrome =
+        /Chrome/i
+        .test(ua);
 
-    // Chỉ cảnh báo Android mở trong app
+    // Android nhưng KHÔNG phải Chrome
     if(
         isAndroid &&
-        isInApp
+        !isChrome
     ){
 
         alert(
-`Để tải ảnh:
+`Bạn đang mở trong ứng dụng.
 
-Bấm ⋮ góc trên
-→ Mở bằng Google Chrome
-→ Bấm lại nút Tải ảnh`
+Để tải ảnh:
+
+1. Bấm dấu ⋮ góc trên
+2. Chọn "Mở bằng Chrome"
+3. Tải lại ảnh`
         );
 
         return;
+
     }
 
     // iPhone
+
     if(
-        /iPhone|iPad|iPod/
-        .test(ua)
-        &&
+        isIOS &&
         navigator.share
     ){
 
-        canvas.toBlob(function(blob){
+        canvas.toBlob(
+        function(blob){
 
             const file =
                 new File(
                     [blob],
                     "HopMat60Nam.png",
                     {
-                        type:"image/png"
+                        type:
+                        "image/png"
                     }
                 );
 
             navigator.share({
-                files:[file]
+                files:[
+                    file
+                ]
             });
 
         },"image/png");
 
         return;
+
     }
 
     // Chrome Android + máy tính
 
-    canvas.toBlob(function(blob){
+    canvas.toBlob(
+    function(blob){
 
         const url =
             URL.createObjectURL(
@@ -418,7 +426,8 @@ Bấm ⋮ góc trên
         a.download =
             "HopMat60Nam.png";
 
-        document.body.appendChild(
+        document.body
+        .appendChild(
             a
         );
 
@@ -426,10 +435,14 @@ Bấm ⋮ góc trên
 
         a.remove();
 
-        setTimeout(()=>{
-            URL.revokeObjectURL(
+        setTimeout(
+        ()=>{
+
+            URL
+            .revokeObjectURL(
                 url
             );
+
         },3000);
 
     },"image/png");
