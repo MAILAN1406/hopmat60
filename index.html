@@ -342,46 +342,43 @@ function downloadImage(){
         /Android/i.test(ua);
 
     const isInApp =
+        ua.includes("; wv") ||
+        ua.includes("FBAN") ||
+        ua.includes("FBAV") ||
+        ua.includes("Instagram") ||
         document.referrer.startsWith(
             "android-app://"
-        )
-        ||
-        ua.includes("; wv")
-        ||
-        ua.includes("FBAN")
-        ||
-        ua.includes("FBAV")
-        ||
-        ua.includes("Instagram");
+        );
 
+    const data =
+        canvas.toDataURL(
+            "image/png"
+        );
+
+    // Android mở trong Zalo/Messenger
     if(
         isAndroid &&
         isInApp
     ){
 
-        alert(
-`Đang mở trong ứng dụng.
-
-Để tải ảnh:
-
-1. Bấm dấu ⋮ góc trên
-2. Chọn Mở bằng Chrome
-3. Bấm Tải ảnh lại`
+        window.open(
+            data,
+            "_blank"
         );
 
         return;
     }
 
-    canvas.toBlob(function(blob){
+    // iPhone
+    if(
+        /iPhone|iPad|iPod/
+        .test(ua)
+        &&
+        navigator.share
+    ){
 
-        const isIOS =
-            /iPhone|iPad|iPod/
-            .test(ua);
-
-        if(
-            isIOS &&
-            navigator.share
-        ){
+        canvas.toBlob(
+        function(blob){
 
             const file =
                 new File(
@@ -396,42 +393,30 @@ function downloadImage(){
                 files:[file]
             });
 
-            return;
-        }
+        },"image/png");
 
-        const url =
-            URL.createObjectURL(
-                blob
-            );
+        return;
+    }
 
-        const a =
-            document.createElement(
-                "a"
-            );
-
-        a.href =
-            url;
-
-        a.download =
-            "HopMat60Nam.png";
-
-        document.body.appendChild(
-            a
+    // Chrome Android + máy tính
+    const a =
+        document.createElement(
+            "a"
         );
 
-        a.click();
+    a.href =
+        data;
 
-        document.body.removeChild(
-            a
-        );
+    a.download =
+        "HopMat60Nam.png";
 
-        setTimeout(()=>{
-            URL.revokeObjectURL(
-                url
-            );
-        },3000);
+    document.body.appendChild(
+        a
+    );
 
-    },"image/png");
+    a.click();
+
+    a.remove();
 }
 
     
