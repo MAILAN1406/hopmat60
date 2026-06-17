@@ -396,71 +396,12 @@ function downloadImage(){
 
 }
     
-
-    
+   
 
     
 
 </script>
 
-<script>
-
-function showOpenChromeNotice(){
-
-    const ua =
-        navigator.userAgent;
-
-    const isAndroid =
-        /Android/i.test(ua);
-
-    const isStandalone =
-        window.matchMedia(
-            "(display-mode: standalone)"
-        ).matches;
-
-    const isNormalBrowser =
-        navigator.userActivation ||
-        window.chrome ||
-        document.referrer.includes("android-app://");
-
-    if(
-        isAndroid &&
-        !isStandalone &&
-        !isNormalBrowser
-    ){
-
-        const box =
-        document.createElement("div");
-
-        box.style.cssText=`
-        background:#fff3cd;
-        color:#856404;
-        padding:18px;
-        border-radius:12px;
-        margin-bottom:18px;
-        font-size:18px;
-        line-height:1.7;
-        `;
-
-        box.innerHTML=
-        `
-        ⚠️ Nếu không tải được ảnh:<br><br>
-
-        Bấm ⋮ góc trên<br>
-        → Mở bằng Chrome
-        `;
-
-        document.body.prepend(box);
-    }
-
-}
-
-window.addEventListener(
-"load",
-showOpenChromeNotice
-);
-
-</script>
 
     
     
