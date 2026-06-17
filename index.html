@@ -315,23 +315,55 @@ function zoomOut(){
 }
 
 /* DOWNLOAD */
-
 function downloadImage(){
 
-    const link =
-        document.createElement("a");
+    canvas.toBlob(function(blob){
 
-    link.download =
-        "HopMat60Nam.png";
+        const file =
+            new File(
+                [blob],
+                "HopMat60Nam.png",
+                {
+                    type:"image/png"
+                }
+            );
 
-    link.href =
-        canvas.toDataURL(
-            "image/png",
-            1
-        );
+        if(navigator.share){
 
-    link.click();
+            navigator.share({
+                files:[file]
+            }).catch(()=>{});
+
+            return;
+        }
+
+        const url =
+            URL.createObjectURL(blob);
+
+        const a =
+            document.createElement("a");
+
+        a.href = url;
+
+        a.download =
+            "HopMat60Nam.png";
+
+        document.body.appendChild(a);
+
+        a.click();
+
+        document.body.removeChild(a);
+
+        setTimeout(()=>{
+            URL.revokeObjectURL(url);
+        },3000);
+
+    },"image/png");
 }
+
+
+
+    
 
 </script>
 
