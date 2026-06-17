@@ -402,25 +402,63 @@ function downloadImage(){
     
 
 </script>
+
 <script>
-if(
- !/Chrome/i.test(
-   navigator.userAgent
- ) &&
- /Android/i.test(
-   navigator.userAgent
- )
-){
- setTimeout(()=>{
 
-   alert(
-"Để tải ảnh ổn định trên Android, vui lòng mở bằng Google Chrome."
-   );
+function isInAppBrowser(){
 
- },1000);
+ const ua =
+ navigator.userAgent || "";
+
+ return (
+   ua.includes("FBAN") ||
+   ua.includes("FBAV") ||
+   ua.includes("Messenger") ||
+   ua.includes("Instagram") ||
+   ua.includes("Zalo") ||
+   ua.includes("; wv") ||
+   ua.includes("Line")
+ );
+
 }
-</script>
 
+if(
+ /Android/i.test(
+ navigator.userAgent
+ )
+ &&
+ isInAppBrowser()
+){
+
+ document.body.insertAdjacentHTML(
+ "afterbegin",
+
+ `
+ <div
+ style="
+ background:#fff3cd;
+ color:#856404;
+ padding:18px;
+ margin-bottom:20px;
+ border-radius:12px;
+ font-size:18px;
+ line-height:1.7;
+ ">
+ ⚠️ Bạn đang mở trong ứng dụng.<br><br>
+
+ Để tải ảnh ổn định:<br>
+
+ ① Bấm dấu ⋮ góc trên<br>
+
+ ② Chọn <b>Mở bằng Chrome</b>
+
+ </div>
+ `
+ );
+
+}
+
+</script>
 
     
 </body>
