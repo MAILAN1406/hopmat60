@@ -328,47 +328,67 @@ function downloadImage(){
 
     canvas.toBlob(function(blob){
 
-        const file =
-            new File(
-                [blob],
-                "HopMat60Nam.png",
-                {
-                    type:"image/png"
-                }
+        const isIOS =
+            /iPad|iPhone|iPod/.test(
+                navigator.userAgent
             );
 
-        if(navigator.share){
+        if(isIOS && navigator.share){
+
+            const file =
+                new File(
+                    [blob],
+                    "HopMat60Nam.png",
+                    {
+                        type:"image/png"
+                    }
+                );
 
             navigator.share({
                 files:[file]
-            }).catch(()=>{});
+            });
 
             return;
         }
 
+        // Android + máy tính
+
         const url =
-            URL.createObjectURL(blob);
+            URL.createObjectURL(
+                blob
+            );
 
         const a =
-            document.createElement("a");
+            document.createElement(
+                "a"
+            );
 
-        a.href = url;
+        a.href =
+            url;
 
         a.download =
             "HopMat60Nam.png";
 
-        document.body.appendChild(a);
+        document.body.appendChild(
+            a
+        );
 
         a.click();
 
-        document.body.removeChild(a);
+        document.body.removeChild(
+            a
+        );
 
         setTimeout(()=>{
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(
+                url
+            );
         },3000);
 
     },"image/png");
 }
+
+    
 
 
 
